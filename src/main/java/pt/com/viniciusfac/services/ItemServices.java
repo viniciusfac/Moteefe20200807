@@ -6,18 +6,18 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
-import pt.com.viniciusfac.model.Item;
+import pt.com.viniciusfac.model.ItemOut;
 
 @Service
 public class ItemServices {
 	
 	private final AtomicLong counter = new AtomicLong();
 	
-	public Item create(Item item) {
+	public ItemOut create(ItemOut item) {
 		return item;
 	}
 	
-	public Item update(Item item) {
+	public ItemOut update(ItemOut item) {
 		return item;
 	}	
 	
@@ -25,8 +25,8 @@ public class ItemServices {
 		
 	}
 	
-	public Item findById(String id) {
-		Item item= new Item();
+	public ItemOut findById(String id) {
+		ItemOut item= new ItemOut();
 		
 		item.setId(counter.incrementAndGet());
 		item.setTitle("Teste");
@@ -35,17 +35,17 @@ public class ItemServices {
 		return item;
 	}
 	
-	public List<Item> findAll() {
-		List<Item> items = new ArrayList<Item>();
+	public List<ItemOut> findAll() {
+		List<ItemOut> items = new ArrayList<ItemOut>();
 		for (int i = 0; i < 8; i++) {
-			Item item = mockItem(i);
+			ItemOut item = mockItem(i);
 			items.add(item);			
 		}
 		return items;
 	}
 
-	private Item mockItem(int i) {
-		Item item = new Item();
+	private ItemOut mockItem(int i) {
+		ItemOut item = new ItemOut();
 		item.setId(counter.incrementAndGet());
 		item.setTitle("Teste");
 		item.setQuantity(10-1);

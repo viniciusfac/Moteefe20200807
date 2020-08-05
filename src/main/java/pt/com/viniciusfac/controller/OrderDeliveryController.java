@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.com.viniciusfac.model.OrderDelivery;
+import pt.com.viniciusfac.model.OrderDeliveryIn;
+import pt.com.viniciusfac.model.OrderDeliveryOut;
 import pt.com.viniciusfac.services.OrderDeliveryServices;
 
 @RestController
@@ -22,28 +23,28 @@ public class OrderDeliveryController {
 	
 	@RequestMapping(method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<OrderDelivery> findAll() {
+	public List<OrderDeliveryOut> findAll() {
 		return service.findAll();
 	}	
 	
 	@RequestMapping(value="/{id}",
 			method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OrderDelivery findById(@PathVariable("id") String id) {
+	public OrderDeliveryOut findById(@PathVariable("id") String id) {
 		return service.findById(id);
 	}	
 	
 	@RequestMapping(method=RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OrderDelivery create(@RequestBody OrderDelivery orderDelivery) {
-		return service.create(orderDelivery);
+	public OrderDeliveryOut create(@RequestBody OrderDeliveryIn orderDeliveryIn) {
+		return service.create(orderDeliveryIn);
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OrderDelivery update(@RequestBody OrderDelivery orderDelivery) {
+	public OrderDeliveryOut update(@RequestBody OrderDeliveryOut orderDelivery) {
 		return service.update(orderDelivery);
 	}	
 	

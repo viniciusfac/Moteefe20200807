@@ -12,11 +12,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "delivery_date", "shipments" })
-public class OrderDelivery implements Serializable{
+public class OrderDeliveryOut implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	
 	@JsonProperty("delivery_date")
 	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date deliveryDate;
@@ -25,7 +26,7 @@ public class OrderDelivery implements Serializable{
 	@JsonProperty("shipments")
 	private List<Shipment> shipments;
 
-	public OrderDelivery() {
+	public OrderDeliveryOut() {
 	}
 	
 	@JsonIgnore
@@ -71,7 +72,7 @@ public class OrderDelivery implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		OrderDelivery other = (OrderDelivery) obj;
+		OrderDeliveryOut other = (OrderDeliveryOut) obj;
 		if (deliveryDate == null) {
 			if (other.deliveryDate != null)
 				return false;
@@ -89,5 +90,5 @@ public class OrderDelivery implements Serializable{
 			return false;
 		return true;
 	}
-	
+
 }

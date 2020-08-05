@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
 @JsonPropertyOrder({ "title", "quantity" })
-public class Item implements Serializable{
+public class ItemOut implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 
@@ -18,7 +18,7 @@ public class Item implements Serializable{
 	@JsonProperty("count")
 	private int quantity;
 
-	public Item() {
+	public ItemOut() {
 	}
 	
 	@JsonIgnore
@@ -50,6 +50,7 @@ public class Item implements Serializable{
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -58,7 +59,7 @@ public class Item implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Item other = (Item) obj;
+		ItemOut other = (ItemOut) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

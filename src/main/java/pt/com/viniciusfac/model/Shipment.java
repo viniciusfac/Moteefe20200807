@@ -26,7 +26,7 @@ public class Shipment implements Serializable{
 	
 	@Autowired
 	@JsonProperty("items")
-	private List<Item> items;
+	private List<ItemOut> items;
 
 	public Shipment() {
 	}
@@ -56,11 +56,11 @@ public class Shipment implements Serializable{
 		this.deliveryDate = deliveryDate;
 	}
 
-	public List<Item> getItem() {
+	public List<ItemOut> getItem() {
 		return items;
 	}
 
-	public void setItem(List<Item> item) {
+	public void setItem(List<ItemOut> item) {
 		this.items = item;
 	}
 

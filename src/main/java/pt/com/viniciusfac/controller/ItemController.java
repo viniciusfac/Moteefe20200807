@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import pt.com.viniciusfac.model.Item;
+import pt.com.viniciusfac.model.ItemOut;
 import pt.com.viniciusfac.services.ItemServices;
 
 @RestController
@@ -22,28 +22,28 @@ public class ItemController {
 	
 	@RequestMapping(method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Item> findAll() {
+	public List<ItemOut> findAll() {
 		return service.findAll();
 	}	
 	
 	@RequestMapping(value="/{id}",
 			method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Item findById(@PathVariable("id") String id) {
+	public ItemOut findById(@PathVariable("id") String id) {
 		return service.findById(id);
 	}	
 	
 	@RequestMapping(method=RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Item create(@RequestBody Item item) {
+	public ItemOut create(@RequestBody ItemOut item) {
 		return service.create(item);
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public Item update(@RequestBody Item item) {
+	public ItemOut update(@RequestBody ItemOut item) {
 		return service.update(item);
 	}	
 	
