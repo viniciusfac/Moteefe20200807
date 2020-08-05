@@ -18,39 +18,39 @@ import pt.com.viniciusfac.services.OrderDeliveryServices;
 public class OrderDeliveryController {
 	
 	@Autowired
-	private OrderDeliveryServices orderDelivery;
+	private OrderDeliveryServices service;
 	
 	@RequestMapping(method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<OrderDelivery> findAll() {
-		return orderDelivery.findAll();
+		return service.findAll();
 	}	
 	
 	@RequestMapping(value="/{id}",
 			method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
 	public OrderDelivery findById(@PathVariable("id") String id) {
-		return orderDelivery.findById(id);
+		return service.findById(id);
 	}	
 	
 	@RequestMapping(method=RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OrderDelivery create(@RequestBody OrderDelivery shipment) {
-		return orderDelivery.create(shipment);
+	public OrderDelivery create(@RequestBody OrderDelivery orderDelivery) {
+		return service.create(orderDelivery);
 	}
 	
 	@RequestMapping(method=RequestMethod.PUT,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OrderDelivery update(@RequestBody OrderDelivery shipment) {
-		return orderDelivery.update(shipment);
+	public OrderDelivery update(@RequestBody OrderDelivery orderDelivery) {
+		return service.update(orderDelivery);
 	}	
 	
 	@RequestMapping(value="/{id}", 
 			method=RequestMethod.DELETE)
 	public void delete(@PathVariable("id") String id) {
-		orderDelivery.delete(id);
+		service.delete(id);
 	}	
 	
 }
