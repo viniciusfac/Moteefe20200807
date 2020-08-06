@@ -7,9 +7,10 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
+import pt.com.viniciusfac.model.ItemIn;
 import pt.com.viniciusfac.model.ItemOut;
-import pt.com.viniciusfac.model.OrderDeliveryOut;
 import pt.com.viniciusfac.model.OrderDeliveryIn;
+import pt.com.viniciusfac.model.OrderDeliveryOut;
 import pt.com.viniciusfac.model.Shipment;
 
 @Service
@@ -18,10 +19,14 @@ public class OrderDeliveryServices {
 	private final AtomicLong counter = new AtomicLong();
 	
 	public OrderDeliveryOut create(OrderDeliveryIn orderDeliveryIn) {
-
-		System.out.println("REGION: " + orderDeliveryIn.getRegion());
-		
 		OrderDeliveryOut orderDelivery = new OrderDeliveryOut();
+		
+		System.out.println("REGION: " + orderDeliveryIn.getRegion());
+
+		for (ItemIn itemIn : orderDeliveryIn.getBasket().getItems()) {
+			System.out.println("Produsct: " + itemIn.getProduct().toString());
+			System.out.println("CIOUNT: " + itemIn.getCount());
+		}
 		
 		return orderDelivery;
 	}

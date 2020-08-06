@@ -10,16 +10,16 @@ public class Basket{
 
 	@Autowired
 	@JsonProperty("items")
-	private List<ItemOut> items;
+	private List<ItemIn> items;
 
 	public Basket() {
 	}
 
-	public List<ItemOut> getItems() {
+	public List<ItemIn> getItems() {
 		return items;
 	}
 
-	public void setItems(List<ItemOut> items) {
+	public void setItems(List<ItemIn> items) {
 		this.items = items;
 	}
 
@@ -47,5 +47,6 @@ public class Basket{
 			return false;
 		return true;
 	}
+
 
 }

@@ -16,20 +16,20 @@ public class ItemIn{
 	public ItemIn() {
 	}
 
-	public String getProdusct() {
+	public String getProduct() {
 		return product;
 	}
 
-	public void setProdusct(String produsct) {
-		this.product = produsct;
+	public void setProduct(String product) {
+		this.product = product;
 	}
 
-	public int getCiount() {
+	public int getCount() {
 		return count;
 	}
 
-	public void setCiount(int ciount) {
-		this.count = ciount;
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 	@Override
@@ -59,5 +59,6 @@ public class ItemIn{
 			return false;
 		return true;
 	}
+
 
 }

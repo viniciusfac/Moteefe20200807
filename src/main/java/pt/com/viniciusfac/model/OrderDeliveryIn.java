@@ -1,10 +1,7 @@
 package pt.com.viniciusfac.model;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({ "region", "basket" })
@@ -13,8 +10,7 @@ public class OrderDeliveryIn{
 	private String region;	
 	
 	@Autowired
-	@JsonProperty("basket")
-	private List<Basket> baskets;
+	private Basket basket;
 
 	public OrderDeliveryIn() {
 	}
@@ -27,19 +23,19 @@ public class OrderDeliveryIn{
 		this.region = region;
 	}
 
-	public List<Basket> getBaskets() {
-		return baskets;
+	public Basket getBasket() {
+		return basket;
 	}
 
-	public void setBaskets(List<Basket> baskets) {
-		this.baskets = baskets;
+	public void setBasket(Basket basket) {
+		this.basket = basket;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((baskets == null) ? 0 : baskets.hashCode());
+		result = prime * result + ((basket == null) ? 0 : basket.hashCode());
 		result = prime * result + ((region == null) ? 0 : region.hashCode());
 		return result;
 	}
@@ -53,10 +49,10 @@ public class OrderDeliveryIn{
 		if (getClass() != obj.getClass())
 			return false;
 		OrderDeliveryIn other = (OrderDeliveryIn) obj;
-		if (baskets == null) {
-			if (other.baskets != null)
+		if (basket == null) {
+			if (other.basket != null)
 				return false;
-		} else if (!baskets.equals(other.baskets))
+		} else if (!basket.equals(other.basket))
 			return false;
 		if (region == null) {
 			if (other.region != null)
