@@ -30,7 +30,7 @@ public class Shipment implements Serializable{
 
 	public Shipment() {
 	}
-
+	
 	@JsonIgnore
 	public Long getId() {
 		return id;
@@ -56,12 +56,12 @@ public class Shipment implements Serializable{
 		this.deliveryDate = deliveryDate;
 	}
 
-	public List<ItemOut> getItem() {
+	public List<ItemOut> getItems() {
 		return items;
 	}
 
-	public void setItem(List<ItemOut> item) {
-		this.items = item;
+	public void setItems(List<ItemOut> items) {
+		this.items = items;
 	}
 
 	@Override
@@ -106,6 +106,5 @@ public class Shipment implements Serializable{
 			return false;
 		return true;
 	}
-
 
 }

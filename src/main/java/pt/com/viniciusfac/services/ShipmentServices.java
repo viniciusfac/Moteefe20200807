@@ -51,7 +51,7 @@ public class ShipmentServices {
 		shipment.setId(counter.incrementAndGet());
 		shipment.setSupplier("Supplier");
 		shipment.setDeliveryDate(new Date());
-		shipment.setItem(mockItems());
+		shipment.setItems(mockItems());
 		
 		return shipment;
 	}
@@ -73,6 +73,5 @@ public class ShipmentServices {
 		
 		return item;
 	}
-	
 	
 }
