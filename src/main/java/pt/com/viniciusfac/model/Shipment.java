@@ -1,23 +1,18 @@
 package pt.com.viniciusfac.model;
 
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 
 @JsonPropertyOrder({ "supplier", "deliveryDate", "items" })
-public class Shipment implements Serializable{
+public class Shipment{
 
-	private static final long serialVersionUID = 1L;
-
-	private Long id;
 	private String supplier;
 
 	@JsonProperty("delivery_date")
@@ -29,15 +24,6 @@ public class Shipment implements Serializable{
 	private List<ItemOut> items;
 
 	public Shipment() {
-	}
-	
-	@JsonIgnore
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public String getSupplier() {
@@ -69,7 +55,6 @@ public class Shipment implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((deliveryDate == null) ? 0 : deliveryDate.hashCode());
-		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((items == null) ? 0 : items.hashCode());
 		result = prime * result + ((supplier == null) ? 0 : supplier.hashCode());
 		return result;
@@ -88,11 +73,6 @@ public class Shipment implements Serializable{
 			if (other.deliveryDate != null)
 				return false;
 		} else if (!deliveryDate.equals(other.deliveryDate))
-			return false;
-		if (id == null) {
-			if (other.id != null)
-				return false;
-		} else if (!id.equals(other.id))
 			return false;
 		if (items == null) {
 			if (other.items != null)

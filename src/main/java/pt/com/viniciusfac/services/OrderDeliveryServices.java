@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.stereotype.Service;
 
@@ -18,8 +17,6 @@ import pt.com.viniciusfac.model.Supplier;
 
 @Service
 public class OrderDeliveryServices {
-	
-	private final AtomicLong counter = new AtomicLong();
 	
 	public OrderDeliveryOut create(OrderDeliveryIn orderDeliveryIn) {
 		OrderDeliveryOut orderDeliveryOut = new OrderDeliveryOut();
@@ -117,24 +114,7 @@ public class OrderDeliveryServices {
 		
 		return orderDeliveryOut;
 	}
-	
-	public OrderDeliveryOut update(OrderDeliveryOut orderDelivery) {
-		return orderDelivery;
-	}	
-	
-	public void delete(String id) {
-		
-	}
-	
-	public OrderDeliveryOut findById(String id) {
-		OrderDeliveryOut orderDelivery= new OrderDeliveryOut();
 
-		orderDelivery.setId(counter.incrementAndGet());
-		orderDelivery.setDeliveryDate(new Date());
-
-		return orderDelivery;
-	}
-	
 	public List<OrderDeliveryOut> findAll() {
 		List<OrderDeliveryOut> orderDeliverys = new ArrayList<OrderDeliveryOut>();
 		for (int i = 0; i < 8; i++) {
@@ -146,7 +126,6 @@ public class OrderDeliveryServices {
 
 	private OrderDeliveryOut mockOrderDelivery(int i) {
 		OrderDeliveryOut orderDelivery = new OrderDeliveryOut();
-		orderDelivery.setId(counter.incrementAndGet());
 		orderDelivery.setDeliveryDate(new Date());
 		orderDelivery.setShipments(mockShipments());
 		
@@ -164,7 +143,6 @@ public class OrderDeliveryServices {
 	
 	private Shipment mockShipment(int i) {
 		Shipment shipment = new Shipment();
-		shipment.setId(counter.incrementAndGet());
 		shipment.setSupplier("Supplier");
 		shipment.setDeliveryDate(new Date());
 		shipment.setItems(mockItems());
@@ -183,12 +161,10 @@ public class OrderDeliveryServices {
 
 	private ItemOut mockItem(int i) {
 		ItemOut item = new ItemOut();
-		item.setId(counter.incrementAndGet());
 		item.setTitle("Teste");
 		item.setQuantity(10-1);
 		
 		return item;
 	}
-	
 	
 }
