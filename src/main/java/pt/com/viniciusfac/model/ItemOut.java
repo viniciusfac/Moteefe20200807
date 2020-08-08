@@ -11,7 +11,7 @@ public class ItemOut{
 	
 	@JsonProperty("count")
 	private int quantity;
-
+	
 	public ItemOut() {
 	}
 
