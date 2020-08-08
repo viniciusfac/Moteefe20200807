@@ -42,8 +42,7 @@ public class OrderDeliveryServices {
 		Integer productQtdLeft = 0;
 		
 		Integer supplierIndex = -1;
-		
-		
+
 		for (ItemIn itemIn : items) {
 
 			for (Map.Entry<Integer, List<String>> supplierMap : Supplier.getSupplierMap().entrySet()) {
@@ -133,105 +132,6 @@ public class OrderDeliveryServices {
 		return orderDeliveryOut;
 	}
 
-/*
-	private OrderDeliveryOut getOrderDeliveryOut(String region, List<ItemIn> items ) {
-		OrderDeliveryOut orderDeliveryOut = new OrderDeliveryOut();
-		List<Shipment> shipments = new ArrayList<Shipment>();
-		
-		String supplierName = "";
-		String supplierNameOld = "";
-		Integer supplierIndex = -1;
-		Integer supplierInStock = 0;
-		Boolean supplierHasStock = false;
-		Integer deliveryTime = 0;
-		Integer deliveryTimeOld = 999;
-		Date deliveryDate = new Date();
-		Date deliveryDateTemp = new Date();
-		
-		for (ItemIn itemIn : items) {
-			
-			String productName = itemIn.getProduct().toString();
-			Integer productQtd = itemIn.getCount();
-
-			for (Map.Entry<Integer, List<String>> supplierMap : Supplier.getSupplierMap().entrySet()) {
-	            
-				List<String> supplier = supplierMap.getValue();
-
-				if (supplier.contains(productName)) {
-
-					supplierName = supplier.get(1);
-					supplierInStock = Integer.parseInt(supplier.get(5));
-
-					supplierHasStock = supplierHasStock(supplierInStock, productQtd);
-
-					deliveryTime = getDeliveryTime(supplier, region);
-					
-	            	if (deliveryTime > deliveryTimeOld) {
-	            		supplierName = supplierNameOld;
-	            		deliveryTime = deliveryTimeOld;
-	            	}
-
-					deliveryDateTemp = getDeliveryDate(deliveryTime);
-
-	            	supplierNameOld = supplierName;
-	            	deliveryTimeOld = deliveryTime;
-
-	            }
-			}
-
-			if (!supplierName.isEmpty()
-					&& deliveryTime > 0 ) {
-				
-				//TODO: setQuantity the total qtd for that supplier
-				ItemOut itemOut = new ItemOut();
-				itemOut.setTitle(productName);
-				itemOut.setQuantity(productQtd);
-
-				supplierIndex = getSupplierIndex(shipments, supplierName);
-				
-				//If supplier already exists, just add a new item
-				//else create a new supplier
-				if (supplierIndex >= 0) {
-
-					if (deliveryDateTemp.after(shipments.get(supplierIndex).getDeliveryDate())) {
-						shipments.get(supplierIndex).setDeliveryDate(deliveryDateTemp);
-					}
-					
-					shipments.get(supplierIndex).getItems().add(itemOut);
-
-				}else {
-					
-					Shipment shipment = new Shipment();
-					shipment.setSupplier(supplierName);
-					
-					shipment.setDeliveryDate(deliveryDateTemp);
-
-					List<ItemOut> itemsOut = new ArrayList<ItemOut>();
-					itemsOut.add(itemOut);
-
-					shipment.setItems(itemsOut);
-					
-					shipments.add(shipment);
-					
-				}
-
-			}
-
-			supplierNameOld = "";
-			deliveryTimeOld = 999;
-			
-		}
-
-		
-		deliveryDate = deliveryDateTemp.after(deliveryDate) ? deliveryDateTemp : deliveryDate ;
-		
-		orderDeliveryOut.setDeliveryDate(deliveryDate);
-		orderDeliveryOut.setShipments(shipments);
-		
-		return orderDeliveryOut;
-	}
-*/
-	
 	private Integer getDeliveryTime(List<String> supplier, String region) {
 		Integer deliveryTime = 0;
 
