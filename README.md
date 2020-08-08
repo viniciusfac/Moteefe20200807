@@ -20,7 +20,7 @@ IN:
 			"items": [
 				{
 					"produsct": "black_mug",
-					"ciount": 1
+					"ciount": 5
 				},
 				{
 					"produsct": "pink_t-shirt",
@@ -43,12 +43,26 @@ OUT:
     "delivery_date": "2020-08-16",
     "shipments": [
         {
+            "suplier": "Shirts Unlimited",
+            "delivery_date": "2020-08-16",
+            "items": [
+                {
+                    "title": "black_mug",
+                    "count": 2
+                },
+                {
+                    "title": "white_mug",
+                    "count": 3
+                }
+            ]
+        },
+        {
             "suplier": "Shirts4U",
             "delivery_date": "2020-08-14",
             "items": [
                 {
                     "title": "black_mug",
-                    "count": 1
+                    "count": 3
                 }
             ]
         },
@@ -57,22 +71,12 @@ OUT:
             "delivery_date": "2020-08-13",
             "items": [
                 {
-                    "title": "pink_t-shirt",
-                    "count": 2
-                },
-                {
                     "title": "blue_t-shirt",
                     "count": 3
-                }
-            ]
-        },
-        {
-            "suplier": "Shirts Unlimited",
-            "delivery_date": "2020-08-16",
-            "items": [
+                },
                 {
-                    "title": "white_mug",
-                    "count": 4
+                    "title": "pink_t-shirt",
+                    "count": 2
                 }
             ]
         }

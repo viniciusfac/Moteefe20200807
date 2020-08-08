@@ -22,7 +22,7 @@ public class OrderDeliveryController {
 	
 	@RequestMapping(method=RequestMethod.GET,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<OrderDeliveryOut> findAll() {
+	public List<OrderDeliveryOut> findAll() throws Exception{
 		return service.findAll();
 	}	
 	

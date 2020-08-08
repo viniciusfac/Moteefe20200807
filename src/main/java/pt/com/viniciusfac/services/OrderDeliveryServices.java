@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import pt.com.viniciusfac.exception.CustomizedException;
 import pt.com.viniciusfac.model.ItemIn;
 import pt.com.viniciusfac.model.ItemOut;
 import pt.com.viniciusfac.model.ItemSupplier;
@@ -20,14 +21,22 @@ import pt.com.viniciusfac.model.Supplier;
 @Service
 public class OrderDeliveryServices {
 	
-	public OrderDeliveryOut create(OrderDeliveryIn orderDeliveryIn) {
+	public OrderDeliveryOut create(OrderDeliveryIn orderDeliveryIn) throws Exception {
 		OrderDeliveryOut orderDeliveryOut = new OrderDeliveryOut();
 
 		String region = orderDeliveryIn.getRegion();
 
+		if (region.isEmpty() ) {
+			throw new CustomizedException("Region is empty!");
+		}
+		
 		List<ItemIn> items = new ArrayList<ItemIn>();
 		items = orderDeliveryIn.getBasket().getItems();
 
+		if (items.isEmpty() ) {
+			throw new CustomizedException("Items are empty!");
+		}
+		
 		orderDeliveryOut = getOrderDeliveryOut(region, items);
 
 		return orderDeliveryOut;
@@ -51,7 +60,8 @@ public class OrderDeliveryServices {
 	private List<ItemSupplier> getItemSupplier(String region, List<ItemIn> items){
 		
 		List<ItemSupplier> itemSuppliers = new ArrayList<ItemSupplier>();
-		
+
+		//For each item, search for a supplier
 		for (ItemIn itemIn : items) {
 
 			for (Map.Entry<Integer, List<String>> supplierMap : Supplier.getSupplierMap().entrySet()) {
@@ -75,6 +85,7 @@ public class OrderDeliveryServices {
 			
 		}
 
+		//Order products by deliveryDate
 		itemSuppliers.sort(Comparator.comparing(ItemSupplier::getProductName)
 				.thenComparing(ItemSupplier::getDeliveryDate));
 		
@@ -90,6 +101,10 @@ public class OrderDeliveryServices {
 
 		Integer supplierIndex = -1;
 
+		/*  As the list is ordered by product and deliveryDay, the first item will be the
+			earlier delivery. If the supplier has enough stock, no item will be left to
+			search on next supplier
+		*/
 		for (ItemSupplier itemSupplier : itemSuppliers) {
 			
 			if (productNameOld.equalsIgnoreCase(itemSupplier.getProductName().toString())
@@ -100,6 +115,7 @@ public class OrderDeliveryServices {
 				itemSupplier.setProductQtd(productQtdLeft);
 			}
 			
+			//If supplier has enough stock, no product left
 			if (itemSupplier.getInStock() >= itemSupplier.getProductQtd()) {
 				itemSupplier.setStockUsed(itemSupplier.getProductQtd());
 				productQtdLeft = 0;
@@ -107,7 +123,6 @@ public class OrderDeliveryServices {
 				itemSupplier.setStockUsed(itemSupplier.getInStock());
 				productQtdLeft = itemSupplier.getProductQtd() - itemSupplier.getInStock();
 			}
-			
 			
 			ItemOut itemOut = new ItemOut();
 			itemOut.setTitle(itemSupplier.getProductName().toString());
@@ -156,6 +171,8 @@ public class OrderDeliveryServices {
     		deliveryTime = Integer.parseInt(supplier.get(3));
     	}else if ("uk".equalsIgnoreCase(region)){
     		deliveryTime = Integer.parseInt(supplier.get(4));
+    	}else {
+    		throw new CustomizedException("Cant delivery to Region " + region +"!");
     	}
 
 		return deliveryTime;
