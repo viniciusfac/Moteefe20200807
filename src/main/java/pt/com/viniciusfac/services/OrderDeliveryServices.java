@@ -35,78 +35,90 @@ public class OrderDeliveryServices {
 		OrderDeliveryOut orderDeliveryOut = new OrderDeliveryOut();
 		List<Shipment> shipments = new ArrayList<Shipment>();
 		
-		String supplier = "";
-		String supplierOld = "";
+		String supplierName = "";
+		String supplierNameOld = "";
+		Integer supplierIndex = -1;
 		Integer deliveryTime = 0;
 		Integer deliveryTimeOld = 999;
-		Date currentDate = new Date();
-		Calendar c = Calendar.getInstance();
 		Date deliveryDate = new Date();
+		Date deliveryDateTemp = new Date();
 		
 		for (ItemIn itemIn : items) {
-		
-			for (Map.Entry<Integer, List<String>> entry : Supplier.getSupplierMap().entrySet()) {
+			
+			String productName = itemIn.getProduct().toString();
+			Integer productQtd = itemIn.getCount();
+
+			for (Map.Entry<Integer, List<String>> supplierMap : Supplier.getSupplierMap().entrySet()) {
 	            
-				List<String> values = entry.getValue();
-				
-				//TODO: set all itens from a supplier to its json hierarchy
-				//TODO: use the latest date of items to be the delivery date for the supplier
-				if (values.contains(itemIn.getProduct().toString())) {
+				List<String> supplier = supplierMap.getValue();
+
+				if (supplier.contains(productName)) {
+
+					supplierName = supplier.get(1);
+
+					deliveryTime = getDeliveryTime(supplier, region);
 	
 					//TODO: if in_stock < count then look for another supplier
 					//Integer.parseInt(values.get(5)) >= itemIn.getCount()
-	
-	            	supplier = values.get(1);
-	            	
-	            	if ("eu".equalsIgnoreCase(region)){
-	            		deliveryTime = Integer.parseInt(values.get(2));
-	            	}else if ("us".equalsIgnoreCase(region)){
-	            		deliveryTime = Integer.parseInt(values.get(3));
-	            	}else if ("uk".equalsIgnoreCase(region)){
-	            		deliveryTime = Integer.parseInt(values.get(4));
-	            	}
-	
+					
 	            	if (deliveryTime > deliveryTimeOld) {
-	            		supplier = supplierOld;
+	            		supplierName = supplierNameOld;
 	            		deliveryTime = deliveryTimeOld;
 	            	}
-	
-	            	supplierOld = supplier;
+
+					deliveryDateTemp = getDeliveryDate(deliveryTime);
+
+	            	supplierNameOld = supplierName;
 	            	deliveryTimeOld = deliveryTime;
-	
+
 	            }
 			}
-			
-			if (!supplier.isEmpty()
+
+			if (!supplierName.isEmpty()
 					&& deliveryTime > 0 ) {
 				
-				Shipment shipment = new Shipment();
-				shipment.setSupplier(supplier);
-
-				c.setTime(currentDate);
-				c.add(Calendar.DATE, deliveryTime);
-				shipment.setDeliveryDate(c.getTime());
-
-				if (shipment.getDeliveryDate().after(deliveryDate)) {
-					deliveryDate = shipment.getDeliveryDate();
-				}
-				
-				
-				List<ItemOut> itemsOut = new ArrayList<ItemOut>();
+				//TODO: setQuantity the total qtd for that supplier
 				ItemOut itemOut = new ItemOut();
-				itemOut.setTitle(itemIn.getProduct().toString());
-				itemOut.setQuantity(itemIn.getCount());
-				itemsOut.add(itemOut);
+				itemOut.setTitle(productName);
+				itemOut.setQuantity(productQtd);
+
+				supplierIndex = getSupplierIndex(shipments, supplierName);
 				
-				shipment.setItems(itemsOut);
-				
-				shipments.add(shipment);
-				
+				//If supplier already exists, just add a new item
+				//else create a new supplier
+				if (supplierIndex >= 0) {
+
+					if (deliveryDateTemp.after(shipments.get(supplierIndex).getDeliveryDate())) {
+						shipments.get(supplierIndex).setDeliveryDate(deliveryDateTemp);
+					}
+					
+					shipments.get(supplierIndex).getItems().add(itemOut);
+
+				}else {
+					
+					Shipment shipment = new Shipment();
+					shipment.setSupplier(supplierName);
+					
+					shipment.setDeliveryDate(deliveryDateTemp);
+
+					List<ItemOut> itemsOut = new ArrayList<ItemOut>();
+					itemsOut.add(itemOut);
+
+					shipment.setItems(itemsOut);
+					
+					shipments.add(shipment);
+					
+				}
+
 			}
-			
-			supplierOld = "";
+
+			supplierNameOld = "";
 			deliveryTimeOld = 999;
 			
+		}
+
+		if (deliveryDateTemp.after(deliveryDate)) {
+			deliveryDate = deliveryDateTemp;
 		}
 		
 		orderDeliveryOut.setDeliveryDate(deliveryDate);
@@ -115,6 +127,49 @@ public class OrderDeliveryServices {
 		return orderDeliveryOut;
 	}
 
+	private Integer getDeliveryTime(List<String> supplier, String region) {
+		Integer deliveryTime = 0;
+
+    	if ("eu".equalsIgnoreCase(region)){
+    		deliveryTime = Integer.parseInt(supplier.get(2));
+    	}else if ("us".equalsIgnoreCase(region)){
+    		deliveryTime = Integer.parseInt(supplier.get(3));
+    	}else if ("uk".equalsIgnoreCase(region)){
+    		deliveryTime = Integer.parseInt(supplier.get(4));
+    	}
+
+		return deliveryTime;
+	}
+	
+	private Date getDeliveryDate(Integer deliveryTime) {
+		Calendar c = Calendar.getInstance();
+
+		c.setTime(new Date());
+		c.add(Calendar.DATE, deliveryTime);
+
+		return c.getTime();
+	}
+	
+	private Integer getSupplierIndex(List<Shipment> shipments, String supplier ) {
+
+		Integer supplierIndex = -1;
+
+		if (shipments.isEmpty() || supplier.isEmpty()) {
+			return -1;
+		}
+		
+		for (int i = 0; i < shipments.size(); i++) {
+			if(shipments.get(i).getSupplier().equalsIgnoreCase(supplier)) {
+				supplierIndex = i;
+				break;
+			}
+		}
+
+		return supplierIndex;
+
+	}
+	
+	/* MOCK METHODS from this point on */
 	public List<OrderDeliveryOut> findAll() {
 		List<OrderDeliveryOut> orderDeliverys = new ArrayList<OrderDeliveryOut>();
 		for (int i = 0; i < 8; i++) {

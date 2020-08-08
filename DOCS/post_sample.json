@@ -9,6 +9,14 @@
 				{
 					"produsct": "pink_t-shirt",
 					"ciount": 2
+				},
+				{
+					"produsct": "blue_t-shirt",
+					"ciount": 3
+				},
+				{
+					"produsct": "white_mug",
+					"ciount": 4
 				}
 			]
 		}

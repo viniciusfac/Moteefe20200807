@@ -11,8 +11,10 @@ This end point accepts two verbs:
 
 - POST
 	Returns a result based on a supplier/product defined at problem proposal.
-	The defined Json can be used as a requested, for instance:
-	{
+	The defined Json can be used as a requested, for example:
+
+IN: 
+{
 	"region": "us",
 	"basket": {
 			"items": [
@@ -23,7 +25,56 @@ This end point accepts two verbs:
 				{
 					"produsct": "pink_t-shirt",
 					"ciount": 2
+				},
+				{
+					"produsct": "blue_t-shirt",
+					"ciount": 3
+				},
+				{
+					"produsct": "white_mug",
+					"ciount": 4
 				}
 			]
 		}
+}
+
+OUT:
+{
+    "delivery_date": "2020-08-16",
+    "shipments": [
+        {
+            "suplier": "Shirts4U",
+            "delivery_date": "2020-08-14",
+            "items": [
+                {
+                    "title": "black_mug",
+                    "count": 1
+                }
+            ]
+        },
+        {
+            "suplier": "Best Tshirts",
+            "delivery_date": "2020-08-13",
+            "items": [
+                {
+                    "title": "pink_t-shirt",
+                    "count": 2
+                },
+                {
+                    "title": "blue_t-shirt",
+                    "count": 3
+                }
+            ]
+        },
+        {
+            "suplier": "Shirts Unlimited",
+            "delivery_date": "2020-08-16",
+            "items": [
+                {
+                    "title": "white_mug",
+                    "count": 4
+                }
+            ]
+        }
+    ]
 }

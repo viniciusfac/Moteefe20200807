@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "supplier", "deliveryDate", "items" })
 public class Shipment{
 
+	@JsonProperty("suplier")
 	private String supplier;
 
 	@JsonProperty("delivery_date")
