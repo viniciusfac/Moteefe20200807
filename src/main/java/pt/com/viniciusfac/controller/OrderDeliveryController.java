@@ -29,7 +29,7 @@ public class OrderDeliveryController {
 	@RequestMapping(method=RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	public OrderDeliveryOut create(@RequestBody OrderDeliveryIn orderDeliveryIn) {
+	public OrderDeliveryOut create(@RequestBody OrderDeliveryIn orderDeliveryIn) throws Exception {
 		return service.create(orderDeliveryIn);
 	}
 	

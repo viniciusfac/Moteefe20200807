@@ -38,11 +38,20 @@ public class OrderDeliveryServices {
 		List<Shipment> shipments = new ArrayList<Shipment>();
 		List<ItemSupplier> itemSuppliers = new ArrayList<ItemSupplier>();
 
-		String productNameOld = "";
-		Integer productQtdLeft = 0;
-		
-		Integer supplierIndex = -1;
+		itemSuppliers = getItemSupplier(region, items);
 
+		shipments = getShipments(itemSuppliers);
+
+		orderDeliveryOut.setDeliveryDate(getDeliveryDate(shipments));
+		orderDeliveryOut.setShipments(shipments);
+		
+		return orderDeliveryOut;
+	}
+
+	private List<ItemSupplier> getItemSupplier(String region, List<ItemIn> items){
+		
+		List<ItemSupplier> itemSuppliers = new ArrayList<ItemSupplier>();
+		
 		for (ItemIn itemIn : items) {
 
 			for (Map.Entry<Integer, List<String>> supplierMap : Supplier.getSupplierMap().entrySet()) {
@@ -57,7 +66,7 @@ public class OrderDeliveryServices {
 					itemSupplier.setSupplierName(supplier.get(1));
 					itemSupplier.setInStock(Integer.parseInt(supplier.get(5)));
 					itemSupplier.setStockUsed(0);
-					itemSupplier.setDeliveryDate(getDeliveryDate(getDeliveryTime(supplier, region)));
+					itemSupplier.setDeliveryDate(getItemSupplierDeliveryDate(getDeliveryTime(supplier, region)));
 
 					itemSuppliers.add(itemSupplier);
 
@@ -69,6 +78,18 @@ public class OrderDeliveryServices {
 		itemSuppliers.sort(Comparator.comparing(ItemSupplier::getProductName)
 				.thenComparing(ItemSupplier::getDeliveryDate));
 		
+		return itemSuppliers;
+		
+	}
+	
+	private List<Shipment> getShipments(List<ItemSupplier> itemSuppliers){
+		List<Shipment> shipments = new ArrayList<Shipment>();
+
+		String productNameOld = "";
+		Integer productQtdLeft = 0;
+
+		Integer supplierIndex = -1;
+
 		for (ItemSupplier itemSupplier : itemSuppliers) {
 			
 			if (productNameOld.equalsIgnoreCase(itemSupplier.getProductName().toString())
@@ -123,13 +144,7 @@ public class OrderDeliveryServices {
 			productNameOld = itemSupplier.getProductName();
 			
 		}
-
-		//TODO: calculate deliveryDate and set
-		//deliveryDate = deliveryDateTemp.after(deliveryDate) ? deliveryDateTemp : deliveryDate ;
-		//orderDeliveryOut.setDeliveryDate(deliveryDate);
-		orderDeliveryOut.setShipments(shipments);
-		
-		return orderDeliveryOut;
+		return shipments;
 	}
 
 	private Integer getDeliveryTime(List<String> supplier, String region) {
@@ -146,7 +161,7 @@ public class OrderDeliveryServices {
 		return deliveryTime;
 	}
 	
-	private Date getDeliveryDate(Integer deliveryTime) {
+	private Date getItemSupplierDeliveryDate(Integer deliveryTime) {
 		Calendar c = Calendar.getInstance();
 
 		c.setTime(new Date());
@@ -173,6 +188,14 @@ public class OrderDeliveryServices {
 		return supplierIndex;
 
 	}
+	
+	private Date getDeliveryDate(List<Shipment> shipments) {
+
+		shipments.sort(Comparator.comparing(Shipment::getDeliveryDate).reversed());
+		
+		return shipments.get(0).getDeliveryDate();
+	}
+	
 	
 	/* MOCK METHODS from this point on */
 	public List<OrderDeliveryOut> findAll() {
