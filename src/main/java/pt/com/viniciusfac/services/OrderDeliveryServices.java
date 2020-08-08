@@ -2,6 +2,7 @@ package pt.com.viniciusfac.services;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import pt.com.viniciusfac.model.ItemIn;
 import pt.com.viniciusfac.model.ItemOut;
+import pt.com.viniciusfac.model.ItemSupplier;
 import pt.com.viniciusfac.model.OrderDeliveryIn;
 import pt.com.viniciusfac.model.OrderDeliveryOut;
 import pt.com.viniciusfac.model.Shipment;
@@ -34,10 +36,113 @@ public class OrderDeliveryServices {
 	private OrderDeliveryOut getOrderDeliveryOut(String region, List<ItemIn> items ) {
 		OrderDeliveryOut orderDeliveryOut = new OrderDeliveryOut();
 		List<Shipment> shipments = new ArrayList<Shipment>();
+		List<ItemSupplier> itemSuppliers = new ArrayList<ItemSupplier>();
+
+		String productNameOld = "";
+		Integer productQtdLeft = 0;
+		
+		Integer supplierIndex = -1;
+		
+		
+		for (ItemIn itemIn : items) {
+
+			for (Map.Entry<Integer, List<String>> supplierMap : Supplier.getSupplierMap().entrySet()) {
+	            
+				List<String> supplier = supplierMap.getValue();
+
+				if (supplier.contains(itemIn.getProduct().toString())) {
+
+					ItemSupplier itemSupplier = new ItemSupplier();
+					itemSupplier.setProductName(itemIn.getProduct().toString());
+					itemSupplier.setProductQtd(itemIn.getCount());
+					itemSupplier.setSupplierName(supplier.get(1));
+					itemSupplier.setInStock(Integer.parseInt(supplier.get(5)));
+					itemSupplier.setStockUsed(0);
+					itemSupplier.setDeliveryDate(getDeliveryDate(getDeliveryTime(supplier, region)));
+
+					itemSuppliers.add(itemSupplier);
+
+	            }
+			}
+			
+		}
+
+		itemSuppliers.sort(Comparator.comparing(ItemSupplier::getProductName)
+				.thenComparing(ItemSupplier::getDeliveryDate));
+		
+		for (ItemSupplier itemSupplier : itemSuppliers) {
+			
+			if (productNameOld.equalsIgnoreCase(itemSupplier.getProductName().toString())
+					&& productQtdLeft <= 0) {
+				continue;
+			}else if (productNameOld.equalsIgnoreCase(itemSupplier.getProductName().toString())
+					&& productQtdLeft > 0 ){
+				itemSupplier.setProductQtd(productQtdLeft);
+			}
+			
+			if (itemSupplier.getInStock() >= itemSupplier.getProductQtd()) {
+				itemSupplier.setStockUsed(itemSupplier.getProductQtd());
+				productQtdLeft = 0;
+			}else {
+				itemSupplier.setStockUsed(itemSupplier.getInStock());
+				productQtdLeft = itemSupplier.getProductQtd() - itemSupplier.getInStock();
+			}
+			
+			
+			ItemOut itemOut = new ItemOut();
+			itemOut.setTitle(itemSupplier.getProductName().toString());
+			itemOut.setQuantity(itemSupplier.getStockUsed());
+
+			supplierIndex = getSupplierIndex(shipments, itemSupplier.getSupplierName().toString());
+			
+			//If supplier already exists, just add a new item
+			//else create a new supplier
+			if (supplierIndex >= 0) {
+
+				if (itemSupplier.getDeliveryDate().after(shipments.get(supplierIndex).getDeliveryDate())) {
+					shipments.get(supplierIndex).setDeliveryDate(itemSupplier.getDeliveryDate());
+				}
+				
+				shipments.get(supplierIndex).getItems().add(itemOut);
+
+			}else {
+				
+				Shipment shipment = new Shipment();
+				shipment.setSupplier(itemSupplier.getSupplierName().toString());
+				
+				shipment.setDeliveryDate(itemSupplier.getDeliveryDate());
+
+				List<ItemOut> itemsOut = new ArrayList<ItemOut>();
+				itemsOut.add(itemOut);
+
+				shipment.setItems(itemsOut);
+				
+				shipments.add(shipment);
+				
+			}
+
+			productNameOld = itemSupplier.getProductName();
+			
+		}
+
+		//TODO: calculate deliveryDate and set
+		//deliveryDate = deliveryDateTemp.after(deliveryDate) ? deliveryDateTemp : deliveryDate ;
+		//orderDeliveryOut.setDeliveryDate(deliveryDate);
+		orderDeliveryOut.setShipments(shipments);
+		
+		return orderDeliveryOut;
+	}
+
+/*
+	private OrderDeliveryOut getOrderDeliveryOut(String region, List<ItemIn> items ) {
+		OrderDeliveryOut orderDeliveryOut = new OrderDeliveryOut();
+		List<Shipment> shipments = new ArrayList<Shipment>();
 		
 		String supplierName = "";
 		String supplierNameOld = "";
 		Integer supplierIndex = -1;
+		Integer supplierInStock = 0;
+		Boolean supplierHasStock = false;
 		Integer deliveryTime = 0;
 		Integer deliveryTimeOld = 999;
 		Date deliveryDate = new Date();
@@ -55,11 +160,11 @@ public class OrderDeliveryServices {
 				if (supplier.contains(productName)) {
 
 					supplierName = supplier.get(1);
+					supplierInStock = Integer.parseInt(supplier.get(5));
+
+					supplierHasStock = supplierHasStock(supplierInStock, productQtd);
 
 					deliveryTime = getDeliveryTime(supplier, region);
-	
-					//TODO: if in_stock < count then look for another supplier
-					//Integer.parseInt(values.get(5)) >= itemIn.getCount()
 					
 	            	if (deliveryTime > deliveryTimeOld) {
 	            		supplierName = supplierNameOld;
@@ -117,16 +222,16 @@ public class OrderDeliveryServices {
 			
 		}
 
-		if (deliveryDateTemp.after(deliveryDate)) {
-			deliveryDate = deliveryDateTemp;
-		}
+		
+		deliveryDate = deliveryDateTemp.after(deliveryDate) ? deliveryDateTemp : deliveryDate ;
 		
 		orderDeliveryOut.setDeliveryDate(deliveryDate);
 		orderDeliveryOut.setShipments(shipments);
 		
 		return orderDeliveryOut;
 	}
-
+*/
+	
 	private Integer getDeliveryTime(List<String> supplier, String region) {
 		Integer deliveryTime = 0;
 
@@ -153,7 +258,7 @@ public class OrderDeliveryServices {
 	private Integer getSupplierIndex(List<Shipment> shipments, String supplier ) {
 
 		Integer supplierIndex = -1;
-
+		
 		if (shipments.isEmpty() || supplier.isEmpty()) {
 			return -1;
 		}
