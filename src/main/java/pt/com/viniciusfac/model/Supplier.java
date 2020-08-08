@@ -64,6 +64,7 @@ public class Supplier {
         supplierSet06.add("2");//delivery_times_uk
         supplierSet06.add("2");//in_stock
         supplierMap.put(6, supplierSet06);
+        
     }
 
 	public static Map<Integer, List<String>> getSupplierMap() {
